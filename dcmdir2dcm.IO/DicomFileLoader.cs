@@ -24,9 +24,25 @@ namespace dcmdir2dcm.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
+            
+            return LoadImages(directory.GetFiles("*.*", SearchOption.AllDirectories));
+        }
 
-            var filteredFiles = directory.GetFiles("*.*", SearchOption.AllDirectories);
-            return filteredFiles.Select(file =>
+
+        /// <summary>
+        /// Loads dicom images from the given collection of <paramref name="files"/>.
+        /// </summary>
+        /// <param name="files">Collection containing all the files to be loaded</param>
+        /// <exception cref="ArgumentNullException"><paramref name="files"/> is null</exception>
+        /// <returns>Collection of all loaded dicom images.</returns>
+        public IEnumerable<DicomImage> LoadImages(IEnumerable<FileInfo> files)
+        {
+            if (files == null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
+            return files.Select(file =>
             {
                 try
                 {
@@ -37,7 +53,7 @@ namespace dcmdir2dcm.IO
                     // Images that could not be loaded are skipped
                     return null;
                 }
-            }).Where(c=>c!=null);
+            }).Where(c => c != null);
         }
     }
 }

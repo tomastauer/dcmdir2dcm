@@ -22,13 +22,67 @@ namespace dcmdir2dcm.Lib
         /// </summary>
         /// <param name="dicomDirPath">Path to input directory containing all the dicom images to be composed</param>
         /// <param name="destinationPath">Destination path when the composed image should be saved</param>
+        /// <exception cref="ArgumentNullException">
+        /// <para><paramref name="dicomDirPath"/> is null</para>
+        /// <para>or</para>
+        /// <para><paramref name="destinationPath"/> is null</para>
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">Directory with location <paramref name="dicomDirPath"/> was not found</exception>
         public void Compose(string dicomDirPath, string destinationPath)
         {
+            if (dicomDirPath == null)
+            {
+                throw new ArgumentNullException(nameof(dicomDirPath));
+            }
+            if (destinationPath == null)
+            {
+                throw new ArgumentNullException(nameof(destinationPath));
+            }
+
             var fileLoader = new DicomFileLoader();
+            var input = fileLoader.LoadImages(new DirectoryInfo(dicomDirPath)).ToList();
+
+            ComposeInternal(input, destinationPath);
+        }
+
+
+        /// <summary>
+        /// Composes all the dicom images from given <paramref name="dicomFilePaths"/> to single dicom multiframe file and stores it in location provided by <paramref name="destinationPath"/>.
+        /// </summary>
+        /// <param name="dicomFilePaths">Collection of paths refering to all dicom images to be composed</param>
+        /// <param name="destinationPath">Destination path when the composed image should be saved</param>
+        /// <exception cref="ArgumentNullException">
+        /// <para><paramref name="dicomFilePaths"/> is null</para>
+        /// <para>or</para>
+        /// <para><paramref name="destinationPath"/> is null</para>
+        /// </exception>
+        public void Compose(IEnumerable<string> dicomFilePaths, string destinationPath)
+        {
+            if (dicomFilePaths == null)
+            {
+                throw new ArgumentNullException(nameof(dicomFilePaths));
+            }
+            if (destinationPath == null)
+            {
+                throw new ArgumentNullException(nameof(destinationPath));
+            }
+
+            var fileLoader = new DicomFileLoader();
+            var input = fileLoader.LoadImages(dicomFilePaths.Select(filePath => new FileInfo(filePath))).ToList();
+
+            ComposeInternal(input, destinationPath);
+        }
+
+
+        /// <summary>
+        /// Composes all the dicom images given in <paramref name="inputImage"/> to single dicom multiframe file and stores it in location provided by <paramref name="destinationPath"/>.
+        /// </summary>
+        /// <param name="inputImage">Collection of dicom images to be composed</param>
+        /// <param name="destinationPath">Destination path when the composed image should be saved</param>
+        private void ComposeInternal(IList<DicomImage> inputImage, string destinationPath)
+        {
             var fileSaver = new DicomFileSaver();
-         
-            var input = fileLoader.LoadImages(new DirectoryInfo(dicomDirPath));
-            var output = ComposeImages(input.ToList());
+            var output = ComposeImages(inputImage);
             fileSaver.SaveImage(new FileInfo(destinationPath), output);
         }
 
