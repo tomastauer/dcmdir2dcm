@@ -1,0 +1,1 @@
+{"name":"Dcmdir2dcm","tagline":"","body":"# dcmdir2dcm\r\n\r\nProvides an easy way to converts multiple DICOM image files into single multiframe DICOM image file.\r\n\r\n----------\r\n\r\n## Example\r\n```bash\r\ndcmdir2dcm.exe -i C:/directoryWithDicomImages -o C:/result.dcm\r\n```","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
