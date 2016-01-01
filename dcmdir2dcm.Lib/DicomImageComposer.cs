@@ -15,7 +15,7 @@ namespace dcmdir2dcm.Lib
     /// <summary>
     /// Provides method for composing collection of DICOM images into single multiframe dicom image.
     /// </summary>
-    public class DicomImageComposer
+    public class DicomImageComposer : IDicomImageComposer
     {
         /// <summary>
         /// Composes all the dicom images from given <paramref name="dicomDirPath"/> to single dicom multiframe file and stores it in location provided by <paramref name="destinationPath"/>.
