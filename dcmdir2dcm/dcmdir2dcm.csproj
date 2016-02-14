@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>dcmdir2dcm</RootNamespace>
     <AssemblyName>dcmdir2dcm</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\dcmdir2dcm.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -79,16 +81,16 @@
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dicom.Core, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
-      <HintPath>..\packages\fo-dicom.Core.2.0.0-beta3\lib\portable-net45+netcore45+wpa81\Dicom.Core.dll</HintPath>
+    <Reference Include="Dicom.Core, Version=2.0.1.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
+      <HintPath>..\packages\fo-dicom.Core.2.0.1\lib\portable-net45+netcore45+wpa81\Dicom.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dicom.Legacy, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
-      <HintPath>..\packages\fo-dicom.Legacy.2.0.0-beta3\lib\portable-net45+netcore45+wpa81\Dicom.Legacy.dll</HintPath>
+    <Reference Include="Dicom.Legacy, Version=2.0.1.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
+      <HintPath>..\packages\fo-dicom.Legacy.2.0.1\lib\portable-net45+netcore45+wpa81\Dicom.Legacy.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Dicom.Platform, Version=1.9.5.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
-      <HintPath>..\packages\fo-dicom.Platform.2.0.0-beta3\lib\net45\Dicom.Platform.dll</HintPath>
+    <Reference Include="Dicom.Platform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=3a13f649e28eb09a, processorArchitecture=MSIL">
+      <HintPath>..\packages\fo-dicom.Platform.2.0.1\lib\net45\Dicom.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -121,13 +123,12 @@
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\fo-dicom.Platform.2.0.0-beta3\build\net45\fo-dicom.Platform.targets" Condition="Exists('..\packages\fo-dicom.Platform.2.0.0-beta3\build\net45\fo-dicom.Platform.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\fo-dicom.Platform.2.0.0-beta3\build\net45\fo-dicom.Platform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\fo-dicom.Platform.2.0.0-beta3\build\net45\fo-dicom.Platform.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.1.28.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.28.3\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\fo-dicom.Platform.2.0.1\build\net45\fo-dicom.Platform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\fo-dicom.Platform.2.0.1\build\net45\fo-dicom.Platform.targets'))" />
   </Target>
   <Target Name="PostBuildMacros">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
@@ -144,7 +145,8 @@
   </PostBuildEventDependsOn>
     <PostBuildEvent>powershell -file $(SolutionDir)postbuild.ps1 -solutionDir $(SolutionDir) -targetPath $(TargetPath) -platformName $(PlatformName) -targetName $(TargetName) -targetFileName $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />
+  <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
+  <Import Project="..\packages\fo-dicom.Platform.2.0.1\build\net45\fo-dicom.Platform.targets" Condition="Exists('..\packages\fo-dicom.Platform.2.0.1\build\net45\fo-dicom.Platform.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
