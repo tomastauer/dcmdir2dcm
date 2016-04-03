@@ -75,6 +75,42 @@ namespace dcmdir2dcm.Lib
 
 
         /// <summary>
+        /// Composes all the dicom images from given <paramref name="dicomDirPath"/> to single dicom multiframe file and returns a stream containing the result.
+        /// </summary>
+        /// <param name="dicomDirPath">Path to input directory containing all the dicom images to be composed</param>
+        /// <returns>Stream containing the composition result</returns>
+        public Stream Compose(string dicomDirPath)
+        {
+            var fileLoader = new DicomFileLoader();
+            var input = fileLoader.LoadImages(new DirectoryInfo(dicomDirPath)).ToList();
+
+            var stream = new MemoryStream();
+            new DicomFile(ComposeImages(input).Dataset).Save(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
+
+        /// <summary>
+        /// Composes all the dicom images from given <paramref name="dicomFilePaths"/> to single dicom multiframe file and returns a stream containing the result.
+        /// </summary>
+        /// <param name="dicomFilePaths">Collection of paths refering to all dicom images to be composed</param>
+        /// <returns>Stream containing the composition result</returns>
+        public Stream Compose(IEnumerable<string> dicomFilePaths)
+        {
+            var fileLoader = new DicomFileLoader();
+            var input = fileLoader.LoadImages(dicomFilePaths.Select(filePath => new FileInfo(filePath))).ToList();
+
+            var stream = new MemoryStream();
+            new DicomFile(ComposeImages(input).Dataset).Save(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return stream;
+        }
+
+
+        /// <summary>
         /// Composes all the dicom images given in <paramref name="inputImage"/> to single dicom multiframe file and stores it in location provided by <paramref name="destinationPath"/>.
         /// </summary>
         /// <param name="inputImage">Collection of dicom images to be composed</param>

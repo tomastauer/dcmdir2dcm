@@ -21,7 +21,7 @@ namespace dcmdir2dcm.Lib.Tests
 
 
         [Test]
-        public void Compose_FromDirectory_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
+        public void Compose_FromDirectory_ToFile_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
         {
             // Arrange
             var composer = new DicomImageComposer();
@@ -36,9 +36,29 @@ namespace dcmdir2dcm.Lib.Tests
             Assert.That(expectedHash, Is.EqualTo(composedHash));
         }
 
+        [Test]
+        public void Compose_FromDirectory_ToStream_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
+        {
+            // Arrange
+            var composer = new DicomImageComposer();
+            string assetsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
+            byte[] expectedHash = GetMD5Hash(Path.Combine(assetsPath, "expectedResult.dcm"));
+
+            // Act
+            byte[] composedHash;
+            using (var result = composer.Compose(Path.Combine(assetsPath, assetDirectory)))
+            {
+                composedHash = GetMD5Hash(result);
+            }
+
+            // Assert
+            Assert.That(expectedHash, Is.EqualTo(composedHash));
+        }
+
+
 
         [Test]
-        public void Compose_FromFilesList_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
+        public void Compose_FromFilesList_ToFile_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
         {
             // Arrange
             var composer = new DicomImageComposer();
@@ -55,6 +75,27 @@ namespace dcmdir2dcm.Lib.Tests
         }
 
 
+        [Test]
+        public void Compose_FromFilesList_ToStream_ComposesInCorrectOrder([Values("CorrectOrder", "WrongOrder1", "WrongOrder2")] string assetDirectory)
+        {
+            // Arrange
+            var composer = new DicomImageComposer();
+            string assetsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets");
+            byte[] expectedHash = GetMD5Hash(Path.Combine(assetsPath, "expectedResult.dcm"));
+            var files = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", assetDirectory)).GetFiles().Select(file => file.FullName);
+
+            // Act
+            byte[] composedHash;
+            using (var result = composer.Compose(files))
+            {
+                composedHash = GetMD5Hash(result);
+            }
+                
+            // Assert
+            Assert.That(expectedHash, Is.EqualTo(composedHash));
+        }
+
+        
         private byte[] GetMD5Hash(string fileName)
         {
             using (var md5 = MD5.Create())
@@ -63,6 +104,15 @@ namespace dcmdir2dcm.Lib.Tests
                 {
                     return md5.ComputeHash(stream);
                 }
+            }
+        }
+
+
+        private byte[] GetMD5Hash(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                return md5.ComputeHash(stream);
             }
         }
     }

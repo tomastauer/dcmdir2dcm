@@ -23,5 +23,21 @@ namespace dcmdir2dcm.Lib
         /// <param name="dicomFilePaths">Collection of paths refering to all dicom images to be composed</param>
         /// <param name="destinationPath">Destination path when the composed image should be saved</param>
         void Compose(IEnumerable<string> dicomFilePaths, string destinationPath);
+
+
+        /// <summary>
+        /// Composes all the dicom images from given <paramref name="dicomDirPath"/> to single dicom multiframe file and returns a stream containing the result.
+        /// </summary>
+        /// <param name="dicomDirPath">Path to input directory containing all the dicom images to be composed</param>
+        /// <returns>Stream containing the composition result</returns>
+        Stream Compose(string dicomDirPath);
+
+
+        /// <summary>
+        /// Composes all the dicom images from given <paramref name="dicomFilePaths"/> to single dicom multiframe file and returns a stream containing the result.
+        /// </summary>
+        /// <param name="dicomFilePaths">Collection of paths refering to all dicom images to be composed</param>
+        /// <returns>Stream containing the composition result</returns>
+        Stream Compose(IEnumerable<string> dicomFilePaths);
     }
 }
