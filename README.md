@@ -1,6 +1,6 @@
 # dcmdir2dcm
 
-Provides an easy way to converts multiple DICOM image files into single multiframe DICOM image file.
+Provides an easy way to convert multiple DICOM image files into single multiframe DICOM image file.
 
 ------------
 
